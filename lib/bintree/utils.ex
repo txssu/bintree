@@ -1,9 +1,16 @@
 defmodule Bintree.Utils do
+  @moduledoc """
+  Additional features that might be useful to someone
+  """
   @type bintree :: Bintree.bintree()
   @type branch :: Bintree.branch()
 
   @type table :: :ets.tid()
 
+  @doc """
+  Removes branches with duplicate values
+  """
+  @doc since: "1.0.0"
   @spec remove_duplicates(bintree) :: bintree
   def remove_duplicates(tree) do
     table = :ets.new(:filtering_duplicates, [])

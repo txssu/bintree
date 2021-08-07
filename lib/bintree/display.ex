@@ -1,4 +1,6 @@
 defmodule Bintree.Display do
+  @moduledoc false
+
   alias Markex.Element
   import Markex.Element.Operators
 

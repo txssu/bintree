@@ -1,21 +1,41 @@
 # Bintree
 
-**TODO: Add description**
+The module allows you to generate your own binary trees and display them beautifully.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
+This package [available in Hex](https://hex.pm/packages/bintree) and can be installed
 by adding `bintree` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:bintree, "~> 0.1.0"}
+    {:bintree, "~> 1.1.0"}
   ]
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/bintree](https://hexdocs.pm/bintree).
+## Usage
 
+```elixir
+Bintree.new(2, &(&1*2), &(&1 * 3), 4) 
+|> Bintree.to_string() 
+|> IO.puts()
+
+#   Result:
+#               2               
+#               |               
+#       /---------------\       
+#       |               |       
+#       4               6       
+#       |               |       
+#   /-------\       /-------\   
+#   |       |       |       |   
+#   8      12      12      18   
+#   |       |       |       |   
+# /---\   /---\   /---\   /---\ 
+# |   |   |   |   |   |   |   | 
+#16  24  24  36  24  36  36  54 
+```
+
+[Documentation on hex](https://hexdocs.pm/bintree/readme.html).
