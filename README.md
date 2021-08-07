@@ -10,7 +10,7 @@ by adding `bintree` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:bintree, "~> 1.1.0"}
+    {:bintree, "~> 1.0.0"}
   ]
 end
 ```
