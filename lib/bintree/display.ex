@@ -20,7 +20,7 @@ defmodule Bintree.Display do
   end
 
   @spec do_format(bintree) :: element
-  defp do_format({num, {left, right}}) do
+  defp do_format(%Bintree{value: num, left: left, right: right}) do
     len = length(Integer.digits(num))
 
     num_for_elem =

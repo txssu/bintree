@@ -2,6 +2,8 @@ defmodule Bintree do
   @moduledoc """
   Basic module
   """
+  defstruct value: nil, left: nil, right: nil
+
   @typedoc """
   Currently only integers are supported as a value
   """
@@ -9,7 +11,7 @@ defmodule Bintree do
   @typedoc """
   Binary tree with left and right branch
   """
-  @type bintree :: {value, {branch, branch}}
+  @type bintree :: %Bintree{value: integer, left: branch, right: branch}
   @typedoc """
   Branch can be nil or other bintree
   """
@@ -24,8 +26,17 @@ defmodule Bintree do
   @doc since: "1.0.0"
   @spec new(any, branch, branch) :: bintree
   def new(value, left \\ nil, right \\ nil) do
-    {value, {left, right}}
+    left = if branch?(left) do left else new(left) end
+    right = if branch?(right) do right else new(right) end
+
+    %Bintree{value: value, left: left, right: right}
   end
+
+  defp branch?(nil), do: true
+
+  defp branch?(%Bintree{}), do: true
+
+  defp branch?(_other), do: false
 
   @doc """
   Automatically generates binary tree values
@@ -77,7 +88,7 @@ defmodule Bintree do
   Inserts a `value` at a given `path`
 
   ## Example
-      iex> Bintree.new(1, Bintree.new(3), Bintree.new(5))
+      iex> Bintree.new(1, 3, 5)
       iex> |> Bintree.insert([:left, :left], 5)
       iex> |> Bintree.insert([:left, :right], 28)
       # Result:
@@ -93,17 +104,18 @@ defmodule Bintree do
 
   """
   @doc since: "1.1.0"
-  @spec insert(bintree, [:left | :right, ...], value) :: nil
+  @spec insert(bintree, [:left | :right, ...], value) :: bintree
   def insert(tree, path, value)
 
-  def insert(_tree, [], value), do: value
+  def insert(_tree, [], value), do: new(value)
 
-  def insert({tree_value, {left, right}}, [head | tail], value) do
+  def insert(%Bintree{value: v, left: left, right: right}, [head | tail], value) do
     case head do
       :left ->
-        new(tree_value, insert(left, tail, value), right)
+        new(v, insert(left, tail, value), right)
+
       :right ->
-        new(tree_value, left, insert(right, tail, value))
+        new(v, left, insert(right, tail, value))
     end
   end
 
@@ -114,12 +126,12 @@ defmodule Bintree do
   @spec filter(branch, filter_fun) :: branch
   def filter(tree, filter_fun)
 
-  def filter({value, {left, right}}, filter_fun) do
-    if filter_fun.(value) do
-      left = filter(left, filter_fun)
-      right = filter(right, filter_fun)
+  def filter(%Bintree{value: v, left: l, right: r}, filter_fun) do
+    if filter_fun.(v) do
+      left = filter(l, filter_fun)
+      right = filter(r, filter_fun)
 
-      new(value, left, right)
+      new(v, left, right)
     else
       nil
     end

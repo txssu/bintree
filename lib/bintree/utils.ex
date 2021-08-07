@@ -3,8 +3,10 @@ defmodule Bintree.Utils do
   Additional features that might be useful to someone
   """
   @type bintree :: Bintree.bintree()
+  @typedoc false
   @type branch :: Bintree.branch()
 
+  @typedoc false
   @type table :: :ets.tid()
 
   @doc """
@@ -22,11 +24,11 @@ defmodule Bintree.Utils do
   @spec do_remove_duplicates(branch, :ets.tid()) :: branch
   defp do_remove_duplicates(nil, _table), do: nil
 
-  defp do_remove_duplicates({value, {left, right}}, table) do
-    if :ets.insert_new(table, {value}) do
-      left = do_remove_duplicates(left, table)
-      right = do_remove_duplicates(right, table)
-      Bintree.new(value, left, right)
+  defp do_remove_duplicates(%Bintree{value: v, left: l, right: r}, table) do
+    if :ets.insert_new(table, {v}) do
+      left = do_remove_duplicates(l, table)
+      right = do_remove_duplicates(r, table)
+      Bintree.new(v, left, right)
     else
       nil
     end
