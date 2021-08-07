@@ -30,7 +30,7 @@ defmodule Bintree do
   @doc """
   Automatically generates binary tree values
 
-  Stops if `stop_fun` returns `true` or if it reaches a certain `depth`
+  Generates a branch while the filter_fun returns a truthy value.
 
   ## Examples
       iex> Bintree.new(1, &(&1*3), &(&1+3), &(&1 > 10))
@@ -44,14 +44,14 @@ defmodule Bintree do
   """
   @doc since: "1.0.0"
   @spec new(any, process_fun, process_fun, filter_fun | non_neg_integer()) :: branch
-  def new(value, left_fun, right_fun, stop_fun) when is_function(stop_fun) do
-    if stop_fun.(value) do
-      nil
-    else
-      left = new(left_fun.(value), left_fun, right_fun, stop_fun)
-      right = new(right_fun.(value), left_fun, right_fun, stop_fun)
+  def new(value, left_fun, right_fun, filter_fun) when is_function(filter_fun) do
+    if filter_fun.(value) do
+      left = new(left_fun.(value), left_fun, right_fun, filter_fun)
+      right = new(right_fun.(value), left_fun, right_fun, filter_fun)
 
-      {value, {left, right}}
+      new(value, left, right)
+    else
+      nil
     end
   end
 
@@ -61,7 +61,7 @@ defmodule Bintree do
     left = new(left_fun.(value), left_fun, right_fun, depth - 1)
     right = new(right_fun.(value), left_fun, right_fun, depth - 1)
 
-    {value, {left, right}}
+    new(value, left, right)
   end
 
   @doc """
@@ -84,7 +84,8 @@ defmodule Bintree do
     if filter_fun.(value) do
       left = filter(left, filter_fun)
       right = filter(right, filter_fun)
-      {value, {left, right}}
+
+      new(value, left, right)
     else
       nil
     end
