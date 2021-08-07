@@ -74,6 +74,40 @@ defmodule Bintree do
   end
 
   @doc """
+  Inserts a `value` at a given `path`
+
+  ## Example
+      iex> Bintree.new(1, Bintree.new(3), Bintree.new(5))
+      iex> |> Bintree.insert([:left, :left], 5)
+      iex> |> Bintree.insert([:left, :right], 28)
+      # Result:
+      #     1
+      #     |
+      #    /---\\
+      #    |   |
+      #    3   5
+      #    |
+      #  /--\\
+      #  |  |
+      #  5 28
+
+  """
+  @doc since: "1.1.0"
+  @spec insert(bintree, [:left | :right, ...], value) :: nil
+  def insert(tree, path, value)
+
+  def insert(_tree, [], value), do: value
+
+  def insert({tree_value, {left, right}}, [head | tail], value) do
+    case head do
+      :left ->
+        new(tree_value, insert(left, tail, value), right)
+      :right ->
+        new(tree_value, left, insert(right, tail, value))
+    end
+  end
+
+  @doc """
   Filters the `bintree`, i.e. returns only those branch for which `filter_fun` returns a truthy value.
   """
   @doc since: "1.0.0"
