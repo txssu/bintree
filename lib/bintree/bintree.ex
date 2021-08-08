@@ -103,11 +103,13 @@ defmodule Bintree do
       #  5 28
 
   """
-  @doc since: "1.1.0"
+  @doc since: "1.1.1"
   @spec insert(bintree, [:left | :right, ...], value) :: bintree
   def insert(tree, path, value)
 
-  def insert(_tree, [], value), do: new(value)
+  def insert(nil, [], value), do: new(value)
+
+  def insert(tree, [], value), do: %{tree | value: value}
 
   def insert(%Bintree{value: v, left: left, right: right}, [head | tail], value) do
     case head do
