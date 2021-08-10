@@ -4,22 +4,18 @@ defmodule Bintree.Display do
   alias Markex.Element
   import Markex.Element.Operators
 
-  @type bintree :: Bintree.bintree()
-  @type branch :: Bintree.branch()
-  @type element :: Markex.Element.element()
-
   @space Element.new(" ")
   @down Element.new("|")
   @left Element.new("/")
   @right Element.new("\\")
 
-  @spec format(bintree) :: String.t()
+  @spec format(Bintree.t()) :: String.t()
   def format(tree) do
     do_format(tree)
     |> Element.to_string()
   end
 
-  @spec do_format(bintree) :: element
+  @spec do_format(Bintree.t()) :: Element.t()
   defp do_format(%Bintree{value: num, left: left, right: right}) do
     len = length(Integer.digits(num))
 
@@ -39,7 +35,7 @@ defmodule Bintree.Display do
     end
   end
 
-  @spec do_format_div(bintree, bintree) :: element
+  @spec do_format_div(Bintree.t(), Bintree.t()) :: Element.t()
   defp do_format_div(left, right) do
     columns =
       [left, right] = [
@@ -55,22 +51,22 @@ defmodule Bintree.Display do
     connector(columns) <~> elem
   end
 
-  @spec bar(String.t(), non_neg_integer()) :: element
+  @spec bar(String.t(), non_neg_integer()) :: Element.t()
   defp bar(symbol, len) do
     Element.new(symbol, len, 1)
   end
 
-  @spec horizontal_bar(non_neg_integer()) :: element
+  @spec horizontal_bar(non_neg_integer()) :: Element.t()
   defp horizontal_bar(len) do
     bar("-", len)
   end
 
-  @spec empty_bar(non_neg_integer()) :: element
+  @spec empty_bar(non_neg_integer()) :: Element.t()
   defp empty_bar(len) do
     bar(" ", len)
   end
 
-  @spec connector([element, ...]) :: element
+  @spec connector([Element.t(), ...]) :: Element.t()
   defp connector([left, right]) do
     left_column_len = Element.width(left)
 

@@ -9,13 +9,9 @@ defmodule Bintree do
   """
   @type value :: integer
   @typedoc """
-  Binary tree with left and right branch
+  Binary tree where branches can be nil
   """
-  @type bintree :: %Bintree{value: integer, left: branch, right: branch}
-  @typedoc """
-  Branch can be nil or other bintree
-  """
-  @type branch :: bintree | nil
+  @type t :: %Bintree{value: integer, left: t | nil, right: t | nil}
 
   @type filter_fun :: (value -> boolean)
   @type process_fun :: (value -> value)
@@ -24,10 +20,21 @@ defmodule Bintree do
   Creates base binary tree
   """
   @doc since: "1.0.0"
-  @spec new(any, branch, branch) :: bintree
+  @spec new(any, t | nil, t | nil) :: t
   def new(value, left \\ nil, right \\ nil) do
-    left = if branch?(left) do left else new(left) end
-    right = if branch?(right) do right else new(right) end
+    left =
+      if branch?(left) do
+        left
+      else
+        new(left)
+      end
+
+    right =
+      if branch?(right) do
+        right
+      else
+        new(right)
+      end
 
     %Bintree{value: value, left: left, right: right}
   end
@@ -54,7 +61,7 @@ defmodule Bintree do
       # when the depth of 4 values is reached.
   """
   @doc since: "1.0.0"
-  @spec new(any, process_fun, process_fun, filter_fun | non_neg_integer()) :: branch
+  @spec new(any, process_fun, process_fun, filter_fun | non_neg_integer()) :: t | nil
   def new(value, left_fun, right_fun, filter_fun) when is_function(filter_fun) do
     if filter_fun.(value) do
       left = new(left_fun.(value), left_fun, right_fun, filter_fun)
@@ -79,7 +86,7 @@ defmodule Bintree do
   Formats the type of a binary tree to a string
   """
   @doc since: "1.0.0"
-  @spec to_string(bintree) :: String.t()
+  @spec to_string(t) :: String.t()
   def to_string(tree) do
     Bintree.Display.format(tree)
   end
@@ -104,7 +111,7 @@ defmodule Bintree do
 
   """
   @doc since: "1.1.1"
-  @spec insert(bintree, [:left | :right, ...], value) :: bintree
+  @spec insert(t, [:left | :right, ...], value) :: t
   def insert(tree, path, value)
 
   def insert(nil, [], value), do: new(value)
@@ -125,7 +132,7 @@ defmodule Bintree do
   Filters the `bintree`, i.e. returns only those branch for which `filter_fun` returns a truthy value.
   """
   @doc since: "1.0.0"
-  @spec filter(branch, filter_fun) :: branch
+  @spec filter(t | nil, filter_fun) :: t | nil
   def filter(tree, filter_fun)
 
   def filter(%Bintree{value: v, left: l, right: r}, filter_fun) do
