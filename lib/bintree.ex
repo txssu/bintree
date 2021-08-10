@@ -48,13 +48,15 @@ defmodule Bintree do
 
   ## Examples
       iex> Bintree.new(1, &(&1*3), &(&1+3), &(&1 > 10))
-      # Returns a binary tree, where turning left is multiplying by three,
-      # turning right is adding three. If the number is greater than 10,
-      # then the generation of this branch is stopped.
+
+  Returns a binary tree, where turning left is multiplying by three,
+  turning right is adding three. If the number is greater than 10,
+  then the generation of this branch is stopped.
 
       iex> Bintree.new(1, &(&1*3), &(&1+3), 4)
-      # The rules are the same as the previous one, but the generation of the tree will end
-      # when the depth of 4 values is reached.
+
+  The rules are the same as the previous one, but the generation of the tree will end
+  when the depth of 4 values is reached.
   """
   @doc since: "1.0.0"
   @spec new(any, process_fun, process_fun, filter_fun | non_neg_integer()) :: t | nil
@@ -85,6 +87,7 @@ defmodule Bintree do
       iex> Bintree.new(1, 3, 5)
       iex> |> Bintree.insert([:left, :left], 5)
       iex> |> Bintree.insert([:left, :right], 28)
+
       # Result:
       #     1
       #     |
