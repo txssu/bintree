@@ -5,16 +5,12 @@ defmodule Bintree do
   defstruct value: nil, left: nil, right: nil
 
   @typedoc """
-  Currently only integers are supported as a value
-  """
-  @type value :: integer
-  @typedoc """
   Binary tree where branches can be nil
   """
-  @type t :: %Bintree{value: integer, left: t | nil, right: t | nil}
+  @type t :: %Bintree{value: any, left: t | nil, right: t | nil}
 
-  @type filter_fun :: (value -> boolean)
-  @type process_fun :: (value -> value)
+  @type filter_fun :: (any -> boolean)
+  @type process_fun :: (any -> any)
 
   @doc """
   Creates base binary tree
@@ -83,15 +79,6 @@ defmodule Bintree do
   end
 
   @doc """
-  Formats the type of a binary tree to a string
-  """
-  @doc since: "1.0.0"
-  @spec to_string(t) :: String.t()
-  def to_string(tree) do
-    Bintree.Display.format(tree)
-  end
-
-  @doc """
   Inserts a `value` at a given `path`
 
   ## Example
@@ -111,7 +98,7 @@ defmodule Bintree do
 
   """
   @doc since: "1.1.1"
-  @spec insert(t, [:left | :right, ...], value) :: t
+  @spec insert(t, [:left | :right, ...], any) :: t
   def insert(tree, path, value)
 
   def insert(nil, [], value), do: new(value)
@@ -147,4 +134,12 @@ defmodule Bintree do
   end
 
   def filter(nil, _fun), do: nil
+end
+
+defimpl String.Chars, for: Bintree do
+
+  @spec to_string(Bintree.t()) :: String.t()
+  def to_string(tree) do
+    Bintree.Display.format(tree)
+  end
 end

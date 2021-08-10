@@ -16,11 +16,11 @@ defmodule Bintree.Display do
   end
 
   @spec do_format(Bintree.t()) :: Element.t()
-  defp do_format(%Bintree{value: num, left: left, right: right}) do
-    len = length(Integer.digits(num))
+  defp do_format(%Bintree{value: value, left: left, right: right}) do
+    len = String.length(to_string(value))
 
-    num_for_elem =
-      Integer.to_string(num) <>
+    value_for_elem =
+      to_string(value) <>
         if rem(len, 2) == 0 do
           " "
         else
@@ -28,10 +28,10 @@ defmodule Bintree.Display do
         end
 
     case {is_nil(left), is_nil(right)} do
-      {true, true} -> Element.new(num_for_elem)
-      {false, true} -> Element.new(num_for_elem) <~> @down <~> do_format(left)
-      {true, false} -> Element.new(num_for_elem) <~> @down <~> do_format(right)
-      {false, false} -> Element.new(num_for_elem) <~> @down <~> do_format_div(left, right)
+      {true, true} -> Element.new(value_for_elem)
+      {false, true} -> Element.new(value_for_elem) <~> @down <~> do_format(left)
+      {true, false} -> Element.new(value_for_elem) <~> @down <~> do_format(right)
+      {false, false} -> Element.new(value_for_elem) <~> @down <~> do_format_div(left, right)
     end
   end
 

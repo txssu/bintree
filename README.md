@@ -18,8 +18,7 @@ end
 ## Usage
 
 ```elixir
-Bintree.new(2, &(&1*2), &(&1 * 3), 4) 
-|> Bintree.to_string() 
+Bintree.new(2, &(&1*2), &(&1 * 3), 4)  
 |> IO.puts()
 
 #   Result:
